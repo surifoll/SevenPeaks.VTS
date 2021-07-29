@@ -22,26 +22,24 @@ namespace SevenPeaks.VTS.Application.Vehicle.Commands.UpdateVehicle
             var entity = _context.Vehicles.First(vehicle => vehicle.Id == command.Id);
             if (entity == null)
             {
-                return new MessageResponse<int>("Vehicle already exists")
+                return new MessageResponse<int>("Vehicle not found!")
                 {
-                    ResponseCode = 400
+                    ResponseCode = 404
                 };
             }
             if(!string.IsNullOrWhiteSpace(command.Name))
                 entity.Name = command.Name;
-             
-            
             entity.UpdatedDate = DateTime.Now;
             entity.UserId = command.UserId;
             if(!string.IsNullOrWhiteSpace(command.CustomFields))
                 entity.CustomFields = command.CustomFields;
             
-             var result = await _context.SaveAsync();
-             return new MessageResponse<int>("Vehicle updated")
-             {
-                 ResponseCode = 200,
-                 Result = result
-             };
+            var result = await _context.SaveAsync();
+            return new MessageResponse<int>("Vehicle updated")
+            {
+                ResponseCode = 200,
+                Result = result
+            };
         }
     }
 }

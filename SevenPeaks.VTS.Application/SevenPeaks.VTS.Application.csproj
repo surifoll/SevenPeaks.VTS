@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Vehicle\Queries" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SevenPeaks.VTS.Common\SevenPeaks.VTS.Common.csproj" />
+    <ProjectReference Include="..\SevenPeaks.VTS.Domain\SevenPeaks.VTS.Domain.csproj" />
+    <ProjectReference Include="..\SevenPeaks.VTS.Infrastructure\SevenPeaks.VTS.Infrastructure.csproj" />
+    <ProjectReference Include="..\SevenPeaks.VTS.Persistence\SevenPeaks.VTS.Persistence.csproj" />
+  </ItemGroup>
+
+</Project>

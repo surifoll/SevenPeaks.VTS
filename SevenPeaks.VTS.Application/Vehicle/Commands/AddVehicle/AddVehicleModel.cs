@@ -8,8 +8,9 @@ namespace SevenPeaks.VTS.Application.Vehicle.Commands.AddVehicle
     {
         public string Name { get; set; }
         public string PlateNumber { get; set; }
-        public string CustomFields => JsonConvert.SerializeObject(AdditionalFields);
-        public List<CustomField> AdditionalFields { get; set; }   
         public string UserId { get; set; }
+        public string DeviceId { get; set; }
+        public string Model { get; set; }
+        public int Year { get; set; }
     }
 }

@@ -10,6 +10,10 @@ using SevenPeaks.VTS.Persistence.ExtensionMethods;
 using SevenPeaks.VTS.Infrastructure.Interfaces;
 using SevenPeaks.VTS.Web.AuthService;
 using Microsoft.AspNetCore.Http;
+using SevenPeaks.VTS.Application.Vehicle.Commands.AddVehicle;
+using SevenPeaks.VTS.Application.Vehicle.Queries.GetVehicles;
+using SevenPeaks.VTS.Application.VehiclePosition.Commands.AddVehiclePosition;
+using SevenPeaks.VTS.Application.VehiclePosition.Queries.GetVehiclePositions;
 using SevenPeaks.VTS.Services.Interfaces;
 
 namespace SevenPeaks.VTS.Web
@@ -30,8 +34,13 @@ namespace SevenPeaks.VTS.Web
                 options.UseSqlite(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDatabaseDeveloperPageExceptionFilter();
-            services.AddSqlLitePersistence(Configuration);
+            services.AddPgsqlPersistence(Configuration);
             services.AddTransient<IAuthenticatedUser, AuthenticatedUser>();
+            services.AddTransient<IGetVehiclesQuery, GetVehiclesQuery>();
+            services.AddTransient<IAddVehicleCommand, AddVehicleCommand>();
+            services.AddTransient<IAddVehiclePositionCommand, AddVehiclePositionCommand>();
+            services.AddTransient<IGetVehiclePositionsQuery, GetVehiclePositionsQuery>();
+       
              
             services.AddSingleton<IUriService>(o =>
             {
@@ -43,6 +52,15 @@ namespace SevenPeaks.VTS.Web
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();
+            services.AddSwaggerGen(options =>  
+            {  
+                options.SwaggerDoc("v2", new Microsoft.OpenApi.Models.OpenApiInfo  
+                {  
+                    Title = "SevenPeaks.VTS",  
+                    Version = "v1",  
+                    Description = "Service for SevenPeaks.VTS",  
+                });  
+            });  
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -74,6 +92,8 @@ namespace SevenPeaks.VTS.Web
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+            app.UseSwagger();
+            app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v2/swagger.json", "SevenPeaks.VTS Services"));
         }
     }
 }

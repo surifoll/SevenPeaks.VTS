@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using SevenPeaks.VTS.Common.Models;
+using SevenPeaks.VTS.Domain.Entities;
 using SevenPeaks.VTS.Persistence;
 
 namespace SevenPeaks.VTS.Application.Vehicle.Commands.AddVehicle
@@ -18,30 +19,51 @@ namespace SevenPeaks.VTS.Application.Vehicle.Commands.AddVehicle
 
         public async Task<MessageResponse<int>> Execute(AddVehicleModel command)
         {
-            if (_context.Vehicles.Any(vehicle => vehicle.Name == command.Name && vehicle.PlateNumber == command.PlateNumber))
+            try
             {
-                return new MessageResponse<int>("Vehicle already exists")
+
+                if (_context.Vehicles.Any(vehicle => vehicle.PlateNumber == command.PlateNumber))
                 {
-                    ResponseCode = 400
+                    return new MessageResponse<int>("Vehicle already exists")
+                    {
+                        ResponseCode = 400
+                    };
+                }
+                
+                if (_context.Vehicles.Any(vehicle => vehicle.DeviceId == command.DeviceId && vehicle.IsActive))
+                {
+                    return new MessageResponse<int>("Device is inuse by a vehicle")
+                    {
+                        ResponseCode = 400
+                    };
+                }
+
+                var entity = new Domain.Entities.Vehicle()
+                {
+                    Name = command.Name,
+                    CreatedDate = DateTime.Now,
+                    PlateNumber = command.PlateNumber,
+                    UpdatedDate = DateTime.Now,
+                    UserId = command.UserId,
+                    DeviceId =  command.DeviceId,
+                    Model = command.Model,
+                    Year = command.Year,
+                    IsActive = true,
+                };
+
+                _context.Vehicles.Add(entity);
+                var result = await _context.SaveAsync();
+                return new MessageResponse<int>("Vehicle create")
+                {
+                    ResponseCode = 200,
+                    Result = result
                 };
             }
-            var entity = new Domain.Entities.Vehicle()
+            catch (Exception e)
             {
-                Name = command.Name,
-                CreatedDate = DateTime.Now,
-                PlateNumber = command.PlateNumber,
-                UpdatedDate = DateTime.Now,
-                UserId = command.UserId,
-                CustomFields = command.CustomFields
-            };
-
-            _context.Vehicles.Add(entity);
-             var result = await _context.SaveAsync();
-             return new MessageResponse<int>("Vehicle create")
-             {
-                 ResponseCode = 200,
-                 Result = result
-             };
+                Console.WriteLine(e);
+                throw;
+            }
         }
     }
 }

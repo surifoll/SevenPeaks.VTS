@@ -16,6 +16,7 @@ namespace SevenPeaks.VTS.Persistence
         Task<int> SaveAsync();
     }
 
+    
     public class DatabaseService : AuditableIdentityContext, IDatabaseService
     {
         readonly IAuthenticatedUser _user;

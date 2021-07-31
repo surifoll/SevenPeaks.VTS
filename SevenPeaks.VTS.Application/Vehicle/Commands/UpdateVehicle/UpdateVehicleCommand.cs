@@ -15,11 +15,12 @@ namespace SevenPeaks.VTS.Application.Vehicle.Commands.UpdateVehicle
         {
             _context = context;
         }
-
-
+        
         public async Task<MessageResponse<int>> Execute(UpdateVehicleModel command)
         {
-            var entity = _context.Vehicles.First(vehicle => vehicle.Id == command.Id);
+            var entity = _context.Vehicles
+                .First(vehicle => vehicle.Id == command.Id && vehicle.DeviceId == command.DeviceId);
+           
             if (entity == null)
             {
                 return new MessageResponse<int>("Vehicle not found!")
@@ -29,10 +30,16 @@ namespace SevenPeaks.VTS.Application.Vehicle.Commands.UpdateVehicle
             }
             if(!string.IsNullOrWhiteSpace(command.Name))
                 entity.Name = command.Name;
+            if(!string.IsNullOrWhiteSpace(command.Model))
+                entity.Model = command.Model;
+            if(command.Year> 1990)
+                entity.Year = command.Year;
+            if(command.IsActive.HasValue)
+                entity.IsActive = command.IsActive.Value;
+           
             entity.UpdatedDate = DateTime.Now;
             entity.UserId = command.UserId;
-            if(!string.IsNullOrWhiteSpace(command.CustomFields))
-                entity.CustomFields = command.CustomFields;
+            
             
             var result = await _context.SaveAsync();
             return new MessageResponse<int>("Vehicle updated")

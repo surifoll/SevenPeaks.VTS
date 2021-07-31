@@ -14,6 +14,8 @@ using SevenPeaks.VTS.Application.Vehicle.Commands.AddVehicle;
 using SevenPeaks.VTS.Application.Vehicle.Queries.GetVehicles;
 using SevenPeaks.VTS.Application.VehiclePosition.Commands.AddVehiclePosition;
 using SevenPeaks.VTS.Application.VehiclePosition.Queries.GetVehiclePositions;
+using SevenPeaks.VTS.Common.Models;
+using SevenPeaks.VTS.Infrastructure.Services;
 using SevenPeaks.VTS.Services.Interfaces;
 
 namespace SevenPeaks.VTS.Web
@@ -40,7 +42,10 @@ namespace SevenPeaks.VTS.Web
             services.AddTransient<IAddVehicleCommand, AddVehicleCommand>();
             services.AddTransient<IAddVehiclePositionCommand, AddVehiclePositionCommand>();
             services.AddTransient<IGetVehiclePositionsQuery, GetVehiclePositionsQuery>();
-       
+            services.AddTransient<IStandardRabbitMq, StandardRabbitMq>();
+            
+            var settings = new RabbitMqSettings();
+            Configuration.GetSection("RabbitMqSettings").Bind(settings);
              
             services.AddSingleton<IUriService>(o =>
             {

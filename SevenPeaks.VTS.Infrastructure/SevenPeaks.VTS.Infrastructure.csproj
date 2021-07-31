@@ -15,4 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SevenPeaks.VTS.Common\SevenPeaks.VTS.Common.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="RabbitMQ.Client" Version="6.2.2" />
+  </ItemGroup>
 </Project>

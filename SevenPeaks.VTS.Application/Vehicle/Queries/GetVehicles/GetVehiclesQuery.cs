@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using SevenPeaks.VTS.Application.Helpers;
 using SevenPeaks.VTS.Common.Models;
 using SevenPeaks.VTS.Infrastructure.Interfaces;
@@ -30,6 +31,11 @@ namespace SevenPeaks.VTS.Application.Vehicle.Queries.GetVehicles
                 ResponseCode = 200,
                 Result =  result
             };
+        }
+        public async Task<bool> Execute(int vehicleId, string deviceId)
+        {   
+            var anyAsync = await  _context.Vehicles.AnyAsync(vehicle => vehicle.DeviceId == deviceId && vehicle.Id == vehicleId);
+            return anyAsync;
         }
     }
 }

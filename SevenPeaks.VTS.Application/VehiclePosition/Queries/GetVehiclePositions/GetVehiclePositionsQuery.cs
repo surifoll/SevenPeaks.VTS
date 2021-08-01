@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using SevenPeaks.VTS.Application.Helpers;
 using SevenPeaks.VTS.Application.Vehicle.Queries.GetVehicles;
 using SevenPeaks.VTS.Common.Models;
@@ -21,10 +22,13 @@ namespace SevenPeaks.VTS.Application.VehiclePosition.Queries.GetVehiclePositions
         
         public async Task<MessageResponse<PagedResults<GetVehiclePositionsModel>>> Execute(VehiclePositionsQuery query)
         {
-            var entities = _context.VehiclePositions.OrderByDescending(p=>p.UpdatedDate).AsQueryable();
+            var entities = _context.VehiclePositions.Include(u=>u.Vehicle).OrderByDescending(p=>p.UpdatedDate).AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(query.PlateNumber))
                 entities = entities.Where(vehicle => vehicle.Vehicle.PlateNumber == query.PlateNumber);
+            
+            if(query.GetLast is true)
+                entities = entities.OrderByDescending(p=>p.UpdatedDate).Take(1);
             
             var result = await PagedResultHelper.CreatePagedResults<Domain.Entities.VehiclePosition, GetVehiclePositionsModel>(_uriService,
                 entities, query.Page, query.PageSize, query.Route, query.OtherQueryStrings);

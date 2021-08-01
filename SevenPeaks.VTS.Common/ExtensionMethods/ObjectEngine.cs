@@ -11,9 +11,13 @@ namespace SevenPeaks.VTS.Common.ExtensionMethods
             return obj == null ? null : Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(obj));
         }
         
-        public static object GetString(this byte[] arr)
+        public static object GetObject(this byte[] arr)
         {
             return arr == null ? null : JsonConvert.DeserializeObject(Encoding.UTF8.GetString(arr));
+        } 
+        public static string GetString(this byte[] arr)
+        {
+            return arr == null ? null : Encoding.UTF8.GetString(arr);
         }
     }
 }

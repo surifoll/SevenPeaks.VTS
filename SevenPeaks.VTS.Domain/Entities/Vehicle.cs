@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+
 namespace SevenPeaks.VTS.Domain.Entities
 {
     public class Vehicle
@@ -13,5 +15,6 @@ namespace SevenPeaks.VTS.Domain.Entities
         public DateTime UpdatedDate { get; set; }
         public string UserId { get; set; }
         public bool IsActive { get; set; }  
+        public IEnumerable<VehiclePosition> VehiclePositions { get; set; }  
     }
 }       

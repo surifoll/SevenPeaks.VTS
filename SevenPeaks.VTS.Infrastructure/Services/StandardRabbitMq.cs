@@ -12,48 +12,54 @@ namespace SevenPeaks.VTS.Infrastructure.Services
         private readonly string _vehiclePosition;
         private readonly string _connectionString;
         private  IModel _channel;
-
+        private RabbitMqSettings _settings;
+        private static string stringResult;
         public StandardRabbitMq(RabbitMqSettings settings)
         {
+            _settings = settings;
             _vehiclePosition = settings.VehiclePositionQueue;
             _connectionString = settings.ConnectionString;
             _channel = RabbitMqChannel();
         }
 
-        public  object Consumer()
+        public  string Consumer()
         {
             
             var consumer = new EventingBasicConsumer(_channel);
-            var result = new object();
-            consumer.Received += (sender, args) =>
+            //var result = "";
+            EventHandler<BasicDeliverEventArgs> consumerOnReceived = (sender, args) =>
             {
                 var message = args.Body;
                 var body = message.ToArray().GetString();
-                result = body;
+                stringResult = body;
             };
+            consumer.Received += consumerOnReceived;
             _channel.BasicConsume(_vehiclePosition, true, consumer);
 
-            return result;
+            return stringResult;
         }
+
+        private void HandleMessage(string val)
+        {
+            stringResult = val;
+        }
+
         public  void Publish(object message)
         {
-            
-            // var message = new { DeviceId = "hgybkfiuf", Longitude = 11.3435454, Latitude = 11.323333, VehicleId = 1 };
             var body = message.GetByteArray();
             _channel.BasicPublish("", _vehiclePosition, null, body);
         }
 
         private  IModel RabbitMqChannel()
         {
-             
             var factory = new ConnectionFactory
             {
-                HostName = "localhost",
-                UserName = "guest",
-                Password = "guest"
+                HostName = _settings.Hostname,
+                UserName = _settings.Username,
+                Password = _settings.Password,
             };
-             var connection = factory.CreateConnection();
-             var channel = connection.CreateModel();
+            var connection = factory.CreateConnection();
+            var channel = connection.CreateModel();
             channel.QueueDeclare(_vehiclePosition, true, false, false, null);
             return channel;
         }

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using FluentValidation;
+using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -17,6 +19,8 @@ using SevenPeaks.VTS.Application.VehiclePosition.Queries.GetVehiclePositions;
 using SevenPeaks.VTS.Common.Models;
 using SevenPeaks.VTS.Infrastructure.Services;
 using SevenPeaks.VTS.Services.Interfaces;
+using SevenPeaks.VTS.Web.BackgroundServices;
+using SevenPeaks.VTS.Web.Validations;
 
 namespace SevenPeaks.VTS.Web
 {
@@ -33,10 +37,10 @@ namespace SevenPeaks.VTS.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlite(
+                options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
             services.AddDatabaseDeveloperPageExceptionFilter();
-            services.AddPgsqlPersistence(Configuration);
+            services.AddSqlPersistence(Configuration);
             services.AddTransient<IAuthenticatedUser, AuthenticatedUser>();
             services.AddTransient<IGetVehiclesQuery, GetVehiclesQuery>();
             services.AddTransient<IAddVehicleCommand, AddVehicleCommand>();
@@ -54,10 +58,12 @@ namespace SevenPeaks.VTS.Web
                 var uri = string.Concat(request.Scheme, "://", request.Host.ToUriComponent());
                 return new UriService(uri);
             });
+            services.AddSingleton(o => settings);
             services.AddTransient<IStandardRabbitMq>(o => new StandardRabbitMq(settings));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<VehiclePositionValidator>());;
+            services.AddHostedService<Worker>();
             services.AddSwaggerGen(options =>  
             {  
                 options.SwaggerDoc("v2", new Microsoft.OpenApi.Models.OpenApiInfo  

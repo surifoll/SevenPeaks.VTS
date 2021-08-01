@@ -1,8 +1,9 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using SevenPeaks.VTS.Common.ExtensionMethods;
 using SevenPeaks.VTS.Common.Models;
-using SevenPeaks.VTS.Domain.Entities;
 using SevenPeaks.VTS.Persistence;
 
 namespace SevenPeaks.VTS.Application.Vehicle.Commands.AddVehicle
@@ -10,10 +11,11 @@ namespace SevenPeaks.VTS.Application.Vehicle.Commands.AddVehicle
     public class AddVehicleCommand : IAddVehicleCommand
     {
         private readonly IDatabaseService _context;
-
-        public AddVehicleCommand(IDatabaseService context)
+        private readonly ILogger<AddVehicleCommand> _logger;
+        public AddVehicleCommand(IDatabaseService context, ILogger<AddVehicleCommand> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
 
@@ -24,28 +26,30 @@ namespace SevenPeaks.VTS.Application.Vehicle.Commands.AddVehicle
 
                 if (_context.Vehicles.Any(vehicle => vehicle.PlateNumber == command.PlateNumber))
                 {
-                    return new MessageResponse<int>("Vehicle already exists")
+                    _logger.LogInformation($"Vehicle with the plate number already exists {command.PlateNumber}");
+                    return new MessageResponse<int>("Vehicle with the plate number already exists")
                     {
                         ResponseCode = 400
                     };
                 }
+                if(!string.IsNullOrWhiteSpace(command.DeviceId))
+                    if (_context.Vehicles.Any(vehicle => vehicle.DeviceId == command.DeviceId && vehicle.IsActive))
+                    {
+                        _logger.LogInformation($"Device Id is inuse by a vehicle{command.PlateNumber}");
+                        return new MessageResponse<int>("Device Id is inuse by a vehicle")
+                        {
+                            ResponseCode = 400
+                        };
+                    }
                 
-                if (_context.Vehicles.Any(vehicle => vehicle.DeviceId == command.DeviceId && vehicle.IsActive))
-                {
-                    return new MessageResponse<int>("Device is inuse by a vehicle")
-                    {
-                        ResponseCode = 400
-                    };
-                }
-
                 var entity = new Domain.Entities.Vehicle()
                 {
                     Name = command.Name,
                     CreatedDate = DateTime.Now,
-                    PlateNumber = command.PlateNumber,
+                    PlateNumber = command.PlateNumber.Cleanup(),
                     UpdatedDate = DateTime.Now,
                     UserId = command.UserId,
-                    DeviceId =  command.DeviceId,
+                    DeviceId =  string.IsNullOrWhiteSpace(command.DeviceId)? Guid.NewGuid().ToString(): command.DeviceId,
                     Model = command.Model,
                     Year = command.Year,
                     IsActive = true,

@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using SevenPeaks.VTS.Application.Vehicle.Commands.AddVehicle;
 using SevenPeaks.VTS.Common.Models;
 using SevenPeaks.VTS.Persistence;
@@ -10,10 +11,11 @@ namespace SevenPeaks.VTS.Application.VehiclePosition.Commands.AddVehiclePosition
     public class AddVehiclePositionCommand : IAddVehiclePositionCommand
     {
         private readonly IDatabaseService _context;
-
-        public AddVehiclePositionCommand(IDatabaseService context)
+        private readonly ILogger<AddVehiclePositionCommand> _logger;
+        public AddVehiclePositionCommand(IDatabaseService context, ILogger<AddVehiclePositionCommand> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
 
@@ -21,6 +23,7 @@ namespace SevenPeaks.VTS.Application.VehiclePosition.Commands.AddVehiclePosition
         {
             if (!_context.Vehicles.Any(vehicle => vehicle.Id == command.VehicleId && vehicle.DeviceId == command.DeviceId && vehicle.IsActive))
             {
+                _logger.LogInformation("Vehicle not found");
                 return new MessageResponse<int>("Vehicle not found")
                 {
                     ResponseCode = 404

@@ -38,5 +38,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="ExtensionMethods\" />
+    <Folder Include="Migrations" />
   </ItemGroup>
 </Project>

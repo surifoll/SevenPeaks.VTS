@@ -4,8 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using RabbitMQ.Client;
+` using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using SevenPeaks.VTS.Application.VehiclePosition.Commands.AddVehiclePosition;
 using SevenPeaks.VTS.Common.ExtensionMethods;
@@ -22,7 +21,7 @@ namespace SevenPeaks.VTS.Web.BackgroundServices
         private readonly IStandardRabbitMq _rabbitMq;
         private readonly IModel _channel;
         private readonly RabbitMqSettings _settings;
-        private IServiceProvider _serviceProvider;
+        private readonly IServiceProvider _serviceProvider;
 
         public Worker(ILogger<Worker> logger, IServiceProvider serviceProvider, IStandardRabbitMq rabbitMq)
         {
@@ -51,7 +50,7 @@ namespace SevenPeaks.VTS.Web.BackgroundServices
         {
              
             var consumer = new EventingBasicConsumer(_channel);
-            //var result = "";
+             
             EventHandler<BasicDeliverEventArgs> consumerOnReceived = async (sender, args) =>
             {
                 var message = args.Body;

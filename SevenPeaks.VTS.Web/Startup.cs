@@ -42,7 +42,7 @@ namespace SevenPeaks.VTS.Web
             services.AddTransient<IAddVehicleCommand, AddVehicleCommand>();
             services.AddTransient<IAddVehiclePositionCommand, AddVehiclePositionCommand>();
             services.AddTransient<IGetVehiclePositionsQuery, GetVehiclePositionsQuery>();
-            services.AddTransient<IStandardRabbitMq, StandardRabbitMq>();
+           // services.AddTransient<IStandardRabbitMq, StandardRabbitMq>();
             
             var settings = new RabbitMqSettings();
             Configuration.GetSection("RabbitMqSettings").Bind(settings);
@@ -54,6 +54,7 @@ namespace SevenPeaks.VTS.Web
                 var uri = string.Concat(request.Scheme, "://", request.Host.ToUriComponent());
                 return new UriService(uri);
             });
+            services.AddTransient<IStandardRabbitMq>(o => new StandardRabbitMq(settings));
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             services.AddControllersWithViews();

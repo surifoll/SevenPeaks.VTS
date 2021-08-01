@@ -11,11 +11,11 @@ namespace SevenPeaks.VTS.Infrastructure.Services
     {
         private readonly string _vehiclePosition;
         private readonly string _connectionString;
-        private readonly IModel _channel;
+        private  IModel _channel;
 
-        public StandardRabbitMq(RabbitMqSettings settings, string vehiclePosition)
+        public StandardRabbitMq(RabbitMqSettings settings)
         {
-            _vehiclePosition = vehiclePosition;
+            _vehiclePosition = settings.VehiclePositionQueue;
             _connectionString = settings.ConnectionString;
             _channel = RabbitMqChannel();
         }
@@ -37,6 +37,7 @@ namespace SevenPeaks.VTS.Infrastructure.Services
         }
         public  void Publish(object message)
         {
+            
             // var message = new { DeviceId = "hgybkfiuf", Longitude = 11.3435454, Latitude = 11.323333, VehicleId = 1 };
             var body = message.GetByteArray();
             _channel.BasicPublish("", _vehiclePosition, null, body);
@@ -47,10 +48,12 @@ namespace SevenPeaks.VTS.Infrastructure.Services
              
             var factory = new ConnectionFactory
             {
-                Uri = new Uri(_connectionString)
+                HostName = "localhost",
+                UserName = "guest",
+                Password = "guest"
             };
-            using var connection = factory.CreateConnection();
-            using var channel = connection.CreateModel();
+             var connection = factory.CreateConnection();
+             var channel = connection.CreateModel();
             channel.QueueDeclare(_vehiclePosition, true, false, false, null);
             return channel;
         }

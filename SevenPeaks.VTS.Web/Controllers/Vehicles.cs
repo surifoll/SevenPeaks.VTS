@@ -27,7 +27,7 @@ namespace SevenPeaks.VTS.Web.Controllers
             _addVehiclePositionCommand = addVehiclePositionCommand;
             _rabbitMq = rabbitMq;
         }
-        [HttpGet("GetVehicles")]
+        
         public async Task<MessageResponse<PagedResults<GetVehiclesModel>>> GetVehicles()
         {
             return  await _vehiclesQuery.Execute(new QueryableResult()
@@ -36,7 +36,7 @@ namespace SevenPeaks.VTS.Web.Controllers
             });
         }
         
-        [HttpGet("GetVehiclePositions")]
+        
         public async Task<MessageResponse<PagedResults<GetVehiclePositionsModel>>> GetVehiclePositions(string plateNumber)
         {
             return  await _vehiclePositionsQuery.Execute(new VehiclePositionsQuery()

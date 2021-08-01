@@ -14,14 +14,16 @@ namespace SevenPeaks.VTS.Web.Controllers
     [Route("api/[controller]")]
     public class VehiclesController : ControllerBase
     {
-        private readonly IGetVehiclesQuery _vehiclesQuery;
         private readonly IAddVehicleCommand _addVehicleCommand;
         private readonly IAddVehiclePositionCommand _addVehiclePositionCommand;
-        private readonly IGetVehiclePositionsQuery _vehiclePositionsQuery;
-        private readonly IStandardRabbitMq _rabbitMq;
         private readonly ILogger<VehiclesController> _logger;
+        private readonly IStandardRabbitMq _rabbitMq;
+        private readonly IGetVehiclePositionsQuery _vehiclePositionsQuery;
+        private readonly IGetVehiclesQuery _vehiclesQuery;
 
-        public VehiclesController(IGetVehiclesQuery vehiclesQuery, IGetVehiclePositionsQuery vehiclePositionsQuery, IAddVehicleCommand addVehicleCommand, IAddVehiclePositionCommand addVehiclePositionCommand, IStandardRabbitMq rabbitMq, ILogger<VehiclesController> logger)
+        public VehiclesController(IGetVehiclesQuery vehiclesQuery, IGetVehiclePositionsQuery vehiclePositionsQuery,
+            IAddVehicleCommand addVehicleCommand, IAddVehiclePositionCommand addVehiclePositionCommand,
+            IStandardRabbitMq rabbitMq, ILogger<VehiclesController> logger)
         {
             _vehiclesQuery = vehiclesQuery;
             _vehiclePositionsQuery = vehiclePositionsQuery;
@@ -30,29 +32,31 @@ namespace SevenPeaks.VTS.Web.Controllers
             _rabbitMq = rabbitMq;
             _logger = logger;
         }
+
         [HttpGet("GetVehicles")]
         public async Task<MessageResponse<PagedResults<GetVehiclesModel>>> Vehicles(int page = 1, int pageSize = 10)
         {
-            return  await _vehiclesQuery.Execute(new QueryableResult()
+            return await _vehiclesQuery.Execute(new QueryableResult
+            {
+                Page = page,
+                PageSize = pageSize,
+                Route = Request.Path.Value
+            });
+        }
+
+        [HttpGet("GetVehiclePositions")]
+        public async Task<MessageResponse<PagedResults<GetVehiclePositionsModel>>> VehiclePositions(string plateNumber,
+            int page = 1, int pageSize = 10)
+        {
+            return await _vehiclePositionsQuery.Execute(new VehiclePositionsQuery
             {
                 Page = page,
                 PageSize = pageSize,
                 Route = Request.Path.Value,
+                PlateNumber = plateNumber
             });
         }
-        
-        [HttpGet("GetVehiclePositions")]
-        public async Task<MessageResponse<PagedResults<GetVehiclePositionsModel>>> VehiclePositions(string plateNumber,int page = 1, int pageSize = 10)
-        {
-            return  await _vehiclePositionsQuery.Execute(new VehiclePositionsQuery()
-            {
-                 Page = page,
-                PageSize = pageSize,
-                Route = Request.Path.Value,
-                PlateNumber = plateNumber,
-            });
-        }
-        
+
         [HttpPost("AddVehicle")]
         public async Task<IActionResult> AddVehicle(AddVehicleModel command)
         {
@@ -62,15 +66,13 @@ namespace SevenPeaks.VTS.Web.Controllers
                 return Ok(result);
             return BadRequest(result);
         }
-        
+
         [HttpPost("AddVehiclePosition")]
         public async Task<IActionResult> AddVehiclePosition(AddVehiclePositionModel command)
         {
-             _rabbitMq.Publish(command);
-             _logger.LogInformation("position added");
-             return Ok();
+            _rabbitMq.Publish(command);
+            _logger.LogInformation("position added");
+            return Ok();
         }
-        
-        
     }
 }

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SevenPeaks.VTS.Web.Models
+﻿namespace SevenPeaks.VTS.Web.Models
 {
     public class ErrorViewModel
     {

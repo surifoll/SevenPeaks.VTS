@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SevenPeaks.VTS.Application.Vehicle.Queries.GetVehicles;
@@ -11,6 +12,7 @@ using SevenPeaks.VTS.Web.Models;
 
 namespace SevenPeaks.VTS.Web.Controllers
 {
+    [Authorize]
     public class VehiclePositionsController : Controller
     {
         private readonly ILogger<VehiclePositionsController> _logger;

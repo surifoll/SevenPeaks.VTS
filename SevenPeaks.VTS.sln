@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SevenPeaks.VTS.Application"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SevenPeaks.VTS.Tests", "SevenPeaks.VTS.Tests\SevenPeaks.VTS.Tests.csproj", "{174167AC-8B68-4FB3-8816-05CC25B27CA0}"
 EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{1F961A3E-03DD-4839-A377-8C6C8110C49C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{174167AC-8B68-4FB3-8816-05CC25B27CA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{174167AC-8B68-4FB3-8816-05CC25B27CA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{174167AC-8B68-4FB3-8816-05CC25B27CA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F961A3E-03DD-4839-A377-8C6C8110C49C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F961A3E-03DD-4839-A377-8C6C8110C49C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F961A3E-03DD-4839-A377-8C6C8110C49C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F961A3E-03DD-4839-A377-8C6C8110C49C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

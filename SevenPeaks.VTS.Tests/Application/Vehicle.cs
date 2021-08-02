@@ -101,7 +101,7 @@ namespace SevenPeaks.VTS.Tests.Application
         public async Task GetVehicleInSuccessTest()
         {
             IGetVehiclesQuery allTimeSheets = new GetVehiclesQuery(_context, _uriService);
-            var expected = await allTimeSheets.Execute(new QueryableResult()
+            var expected = await allTimeSheets.Execute(new VehiclesQuery()
             {
                 Route = "http://120.0.0.1/Timesheet",
                 

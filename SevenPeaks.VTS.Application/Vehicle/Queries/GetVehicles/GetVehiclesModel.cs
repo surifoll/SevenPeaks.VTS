@@ -14,4 +14,10 @@ namespace SevenPeaks.VTS.Application.Vehicle.Queries.GetVehicles
         public string Model { get; set; }
         public int Year { get; set; }
     }
+    public class VehiclesQuery : QueryableResult
+    {
+         
+        public string PlateNumber { get; set; }
+        
+    }
 }

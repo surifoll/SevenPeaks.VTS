@@ -33,7 +33,7 @@ namespace SevenPeaks.VTS.Application.Vehicle.Commands.AddVehicle
                     };
                 }
                 if(!string.IsNullOrWhiteSpace(command.DeviceId))
-                    if (_context.Vehicles.Any(vehicle => vehicle.DeviceId == command.DeviceId && vehicle.IsActive))
+                    if (_context.Vehicles.Any(vehicle => vehicle.DeviceCode == command.DeviceId && vehicle.IsActive))
                     {
                         _logger.LogInformation($"Device Id is inuse by a vehicle{command.PlateNumber}");
                         return new MessageResponse<int>("Device Id is inuse by a vehicle")
@@ -49,7 +49,7 @@ namespace SevenPeaks.VTS.Application.Vehicle.Commands.AddVehicle
                     PlateNumber = command.PlateNumber.Cleanup(),
                     UpdatedDate = DateTime.Now,
                     UserId = command.UserId,
-                    DeviceId =  string.IsNullOrWhiteSpace(command.DeviceId)? Guid.NewGuid().ToString(): command.DeviceId,
+                    DeviceCode =  string.IsNullOrWhiteSpace(command.DeviceId)? Guid.NewGuid().ToString(): command.DeviceId,
                     Model = command.Model,
                     Year = command.Year,
                     IsActive = true,

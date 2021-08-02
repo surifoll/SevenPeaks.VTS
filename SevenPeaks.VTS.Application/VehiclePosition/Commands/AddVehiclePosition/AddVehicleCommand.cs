@@ -21,7 +21,7 @@ namespace SevenPeaks.VTS.Application.VehiclePosition.Commands.AddVehiclePosition
 
         public async Task<MessageResponse<int>> Execute(AddVehiclePositionModel command)
         {
-            if (!_context.Vehicles.Any(vehicle => vehicle.Id == command.VehicleId && vehicle.DeviceId == command.DeviceId && vehicle.IsActive))
+            if (!_context.Vehicles.Any(vehicle => vehicle.Id == command.VehicleId && vehicle.DeviceCode == command.DeviceId && vehicle.IsActive))
             {
                 _logger.LogInformation("Vehicle not found");
                 return new MessageResponse<int>("Vehicle not found")

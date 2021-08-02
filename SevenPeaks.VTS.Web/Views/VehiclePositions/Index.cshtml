@@ -1,0 +1,90 @@
+@model SevenPeaks.VTS.Common.Models.PagedResults<SevenPeaks.VTS.Application.Vehicle.Queries.GetVehicles.GetVehiclesModel>
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+}
+
+<h2>Vehicles</h2>
+
+ 
+ @using (Html.BeginForm("Index", "VehiclePositions", FormMethod.Get))
+     {
+         <span>Plate Number:</span> @Html.TextBox("plateNumber")
+         <input type="submit" value="Search"/>
+         <br/>
+         <br/>
+         <div class="att-card">
+         
+                 <table class="table">
+                     <thead>
+                         <tr>
+         
+                             <th>
+                                Year
+                             </th>
+                             <th>
+                                 Model
+                             </th>
+                             <th>
+                                 Name
+                             </th> <th>
+                                 Plate Number
+                             </th> <th>
+                                 DeviceCode
+                             </th>
+         
+                             <th></th>
+                         </tr>
+                     </thead>
+                     <tbody>
+                         @foreach (var item in Model.Results)
+                         {
+                             <tr>
+         
+                                 <td>
+                                     <label>
+                                         @Html.DisplayFor(modelItem => item.Year)
+                                     </label>
+                                 </td>
+                                 <td>
+                                     <label>
+                                         @Html.DisplayFor(modelItem => item.Model)
+                                     </label>
+                                 </td>
+                                 
+                                 <td>
+                                     @Html.DisplayFor(modelItem => item.Name)
+                                 </td>
+                                 <td>
+                                     @Html.DisplayFor(modelItem => item.PlateNumber)
+                                 </td>
+                                 <td>
+                                     @Html.DisplayFor(modelItem => item.DeviceId)
+                                 </td>
+         
+         
+                                 <td>
+                                     <a asp-action="Positions" asp-route-id="@item.PlateNumber">View Positions</a>  ||
+                                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>  
+                                 </td>
+                             </tr>
+                         }
+                     </tbody>
+                 </table>
+                 
+             </div>
+     }
+
+
+ 
+<ul class="pagination">
+    @for (int i = 1; i <= Model.TotalNumberOfPages; i++)
+    {
+        <li class="@(i == Model.PageNumber ? "page-item active" : "page-item")">
+            <a class="page-link" href="@Url.Action("Index", new { page = i })">@i</a>
+        </li>
+
+    }
+</ul>
+

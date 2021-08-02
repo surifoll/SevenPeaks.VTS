@@ -48,5 +48,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="AuthService\" />
+    <Folder Include="Pages" />
   </ItemGroup>
 </Project>

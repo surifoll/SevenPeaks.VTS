@@ -19,7 +19,7 @@ namespace SevenPeaks.VTS.Application.Vehicle.Commands.UpdateVehicle
         public async Task<MessageResponse<int>> Execute(UpdateVehicleModel command)
         {
             var entity = _context.Vehicles
-                .First(vehicle => vehicle.Id == command.Id && vehicle.DeviceId == command.DeviceId);
+                .First(vehicle => vehicle.Id == command.Id && vehicle.DeviceCode == command.DeviceId);
            
             if (entity == null)
             {

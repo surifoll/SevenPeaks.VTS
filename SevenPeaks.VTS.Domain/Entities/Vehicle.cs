@@ -6,7 +6,7 @@ namespace SevenPeaks.VTS.Domain.Entities
     public class Vehicle
     {
         public int Id { get; set; }
-        public string DeviceId { get; set; }
+        public string DeviceCode { get; set; }
         public string Name { get; set; }
         public string PlateNumber { get; set; }
         public string Model { get; set; }

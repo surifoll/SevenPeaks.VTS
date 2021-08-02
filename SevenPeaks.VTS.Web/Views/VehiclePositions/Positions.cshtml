@@ -1,0 +1,143 @@
+@model SevenPeaks.VTS.Common.Models.PagedResults<SevenPeaks.VTS.Application.VehiclePosition.Queries.GetVehiclePositions.GetVehiclePositionsModel>
+
+@{
+    ViewBag.Title = "title";
+    Layout = "_Layout";
+    var last = ViewBag.Last as SevenPeaks.VTS.Application.VehiclePosition.Queries.GetVehiclePositions.GetVehiclePositionsModel;
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&callback=initMap" async defer></script>
+    <script type="text/javascript">
+  function initMap() {
+      @{
+          System.Diagnostics.Debug.Assert(last != null, nameof(last) + " != null");
+      }
+    //map..
+    var map = new google.maps.Map(document.getElementById('dvMap'), {
+        center: {
+            lat: @last.Latitude,
+            lng: @last.Longitude
+        },
+        zoom: 15
+    });
+    //marker..
+    var marker = new google.maps.Marker({
+        position: {
+             lat: @last.Latitude,
+             lng: @last.Longitude
+        },
+        map: map,
+        draggable: true
+    });
+        
+            //dragend event of marker
+google.maps.event.addListener(marker,'dragend', function () {
+    var Lats = marker.getPosition().lat();
+    var Longs = marker.getPosition().lng();
+
+    $('#Lat').val(Lats);
+    $('#Long').val(Longs);
+
+});
+}
+        </script>
+}
+
+<h2>Vehicle Positions</h2>
+<div class="text-center">
+    <div id="dvMap" style="height:250px;"></div>
+    @if ((ViewBag.Last) != null)
+    {
+        //var last = ViewBag.Last as SevenPeaks.VTS.Application.VehiclePosition.Queries.GetVehiclePositions.GetVehiclePositionsModel;
+        <h3>Last Position</h3>
+        <h4 class="display-6">
+
+            @if (last != null)
+            {
+
+                <table style="text-align: left">
+                    <tr>
+                        <th class="small text-muted pr-2" scope="row">Longitude</th>
+                        <td>@last.Longitude </td>
+                    </tr>
+                    <tr>
+                        <th class="small text-muted pr-2" scope="row">Latitude</th>
+                        <td>@last.Latitude</td>
+                    </tr>
+                    <tr>
+                        <th class="small text-muted pr-2" scope="row">Date</th>
+                        <td> @last.DateCreated.ToString("f")</td>
+                    </tr>
+                </table>
+            }
+        </h4>
+        <p> View on Map</p>
+
+
+    }
+
+</div>
+
+ @using (Html.BeginForm("Index", "VehiclePositions", FormMethod.Get))
+     {
+         
+         <div class="att-card">
+         
+                 <table class="table">
+                     <thead>
+                         <tr>
+         
+                             <th>
+                                Longitude
+                             </th>
+                             <th>
+                                 Latitude
+                             </th>
+                             <th>
+                                 Date
+                             </th>  
+                             <th></th>
+                         </tr>
+                     </thead>
+                     <tbody>
+                         @foreach (var item in Model.Results)
+                         {
+                             <tr>
+         
+                                 <td>
+                                     <label>
+                                         @Html.DisplayFor(modelItem => item.Longitude)
+                                     </label>
+                                 </td>
+                                 <td>
+                                     <label>
+                                         @Html.DisplayFor(modelItem => item.Latitude)
+                                     </label>
+                                 </td>
+                                 
+                                 <td>
+                                     @item.DateCreated.ToString("F")
+                                 </td>
+         
+                                 <td>
+                                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> 
+                                     
+                                 </td>
+                             </tr>
+                         }
+                     </tbody>
+                 </table>
+                 
+             </div>
+     }
+
+
+ 
+<ul class="pagination">
+    @for (int i = 1; i <= Model.TotalNumberOfPages; i++)
+    {
+        <li class="@(i == Model.PageNumber ? "page-item active" : "page-item")">
+            <a class="page-link" href="@Url.Action("Positions", new { page = i })">@i</a>
+        </li>
+
+    }
+</ul>
+

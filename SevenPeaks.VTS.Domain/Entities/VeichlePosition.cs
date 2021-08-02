@@ -3,11 +3,6 @@ namespace SevenPeaks.VTS.Domain.Entities
 {
     public class VehiclePosition
     {
-        public VehiclePosition()
-        {
-            Vehicle = new Vehicle();
-        }
-
         public int Id { get; set; }
         public int VehicleId { get; set; }
         public double Longitude { get; set; }

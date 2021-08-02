@@ -21,9 +21,11 @@ namespace SevenPeaks.VTS.Application.Vehicle.Queries.GetVehicles
             _uriService = uriService;
         }
         
-        public async Task<MessageResponse<PagedResults<GetVehiclesModel>>> Execute(QueryableResult query)
+        public async Task<MessageResponse<PagedResults<GetVehiclesModel>>> Execute(VehiclesQuery query)
         {
-            var entities = _context.Vehicles;
+            var entities = _context.Vehicles.AsQueryable();
+            if (!string.IsNullOrWhiteSpace(query.PlateNumber))
+                entities = entities.Where(p => p.PlateNumber.Contains(query.PlateNumber));
             var result = await PagedResultHelper.CreatePagedResults<Domain.Entities.Vehicle, GetVehiclesModel>(_uriService,
                 entities, query.Page, query.PageSize, query.Route, query.OtherQueryStrings);
             return new MessageResponse<PagedResults<GetVehiclesModel>>()
@@ -34,7 +36,7 @@ namespace SevenPeaks.VTS.Application.Vehicle.Queries.GetVehicles
         }
         public async Task<bool> Execute(int vehicleId, string deviceId)
         {   
-            var anyAsync = await  _context.Vehicles.AnyAsync(vehicle => vehicle.DeviceId == deviceId && vehicle.Id == vehicleId);
+            var anyAsync = await  _context.Vehicles.AnyAsync(vehicle => vehicle.DeviceCode == deviceId && vehicle.Id == vehicleId);
             return anyAsync;
         }
     }

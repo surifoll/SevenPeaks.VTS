@@ -1,78 +1,69 @@
+using System.Diagnostics;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SevenPeaks.VTS.Application.Vehicle.Commands.AddVehicle;
 using SevenPeaks.VTS.Application.Vehicle.Queries.GetVehicles;
-using SevenPeaks.VTS.Application.VehiclePosition.Commands.AddVehiclePosition;
 using SevenPeaks.VTS.Application.VehiclePosition.Queries.GetVehiclePositions;
 using SevenPeaks.VTS.Common.Models;
-using SevenPeaks.VTS.Infrastructure.Interfaces;
+using SevenPeaks.VTS.Web.Models;
 
 namespace SevenPeaks.VTS.Web.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
-    public class VehiclesController : ControllerBase
+    public class VehiclePositionsController : Controller
     {
-        private readonly IAddVehicleCommand _addVehicleCommand;
-        private readonly IAddVehiclePositionCommand _addVehiclePositionCommand;
-        private readonly ILogger<VehiclesController> _logger;
-        private readonly IStandardRabbitMq _rabbitMq;
-        private readonly IGetVehiclePositionsQuery _vehiclePositionsQuery;
-        private readonly IGetVehiclesQuery _vehiclesQuery;
-
-        public VehiclesController(IGetVehiclesQuery vehiclesQuery, IGetVehiclePositionsQuery vehiclePositionsQuery,
-            IAddVehicleCommand addVehicleCommand, IAddVehiclePositionCommand addVehiclePositionCommand,
-            IStandardRabbitMq rabbitMq, ILogger<VehiclesController> logger)
+        private readonly ILogger<VehiclePositionsController> _logger;
+        private readonly IGetVehiclesQuery _query;
+        private readonly IGetVehiclePositionsQuery _positionsQuery;
+     
+        public VehiclePositionsController(ILogger<VehiclePositionsController> logger, IGetVehiclesQuery query, IGetVehiclePositionsQuery positionsQuery)
         {
-            _vehiclesQuery = vehiclesQuery;
-            _vehiclePositionsQuery = vehiclePositionsQuery;
-            _addVehicleCommand = addVehicleCommand;
-            _addVehiclePositionCommand = addVehiclePositionCommand;
-            _rabbitMq = rabbitMq;
             _logger = logger;
+            _query = query;
+            _positionsQuery = positionsQuery;
         }
-
-        [HttpGet("GetVehicles")]
-        public async Task<MessageResponse<PagedResults<GetVehiclesModel>>> Vehicles(int page = 1, int pageSize = 10)
+     
+        public async Task<IActionResult> Index(string plateNumber = "", int page =1, int pageSize= 10)
         {
-            return await _vehiclesQuery.Execute(new QueryableResult
+            var model = await _query.Execute(new VehiclesQuery
             {
-                Page = page,
-                PageSize = pageSize,
-                Route = Request.Path.Value
-            });
-        }
-
-        [HttpGet("GetVehiclePositions")]
-        public async Task<MessageResponse<PagedResults<GetVehiclePositionsModel>>> VehiclePositions(string plateNumber,
-            int page = 1, int pageSize = 10)
-        {
-            return await _vehiclePositionsQuery.Execute(new VehiclePositionsQuery
-            {
-                Page = page,
-                PageSize = pageSize,
                 Route = Request.Path.Value,
+                Page = page,
+                PageSize = pageSize,
                 PlateNumber = plateNumber
             });
+            
+            return base.View(model.Result);
         }
-
-        [HttpPost("AddVehicle")]
-        public async Task<IActionResult> AddVehicle(AddVehicleModel command)
+        
+        public async Task<IActionResult> Positions(string plateNumber = "",int page =1, int pageSize= 10)
         {
-            var result = await _addVehicleCommand.Execute(command);
-
-            if (result.ResponseCode == 200)
-                return Ok(result);
-            return BadRequest(result);
+            var last = await _positionsQuery.Execute(new VehiclePositionsQuery()
+            {
+                Route = Request.Path.Value,
+                Page = page,
+                PageSize = pageSize,
+                PlateNumber = plateNumber,
+                GetLast = true
+            });
+            ViewBag.Last = last.Result.Results.FirstOrDefault();
+            var model = await _positionsQuery.Execute(new VehiclePositionsQuery()
+            {
+                Route = Request.Path.Value,
+                Page = page,
+                PageSize = pageSize,
+                PlateNumber = plateNumber
+            });
+            
+            return base.View(model.Result);
         }
-
-        [HttpPost("AddVehiclePosition")]
-        public async Task<IActionResult> AddVehiclePosition(AddVehiclePositionModel command)
+        
+     
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
         {
-            _rabbitMq.Publish(command);
-            _logger.LogInformation("position added");
-            return Ok();
+            return View(new ErrorViewModel {RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier});
         }
     }
 }

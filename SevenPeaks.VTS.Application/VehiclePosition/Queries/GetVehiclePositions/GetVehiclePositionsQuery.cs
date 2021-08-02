@@ -22,7 +22,7 @@ namespace SevenPeaks.VTS.Application.VehiclePosition.Queries.GetVehiclePositions
         
         public async Task<MessageResponse<PagedResults<GetVehiclePositionsModel>>> Execute(VehiclePositionsQuery query)
         {
-            var entities = _context.VehiclePositions.Include(u=>u.Vehicle).OrderByDescending(p=>p.UpdatedDate).AsQueryable();
+            var entities = _context.VehiclePositions.OrderByDescending(p=>p.UpdatedDate).AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(query.PlateNumber))
                 entities = entities.Where(vehicle => vehicle.Vehicle.PlateNumber == query.PlateNumber);

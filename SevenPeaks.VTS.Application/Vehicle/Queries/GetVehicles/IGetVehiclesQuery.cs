@@ -6,7 +6,7 @@ namespace SevenPeaks.VTS.Application.Vehicle.Queries.GetVehicles
 {
     public interface IGetVehiclesQuery
     {
-        Task<MessageResponse<PagedResults<GetVehiclesModel>>> Execute(QueryableResult query);
+        Task<MessageResponse<PagedResults<GetVehiclesModel>>> Execute(VehiclesQuery query);
         Task<bool> Execute(int vehicleId, string deviceId);
     }
 }

@@ -22,6 +22,7 @@ namespace SevenPeaks.VTS.Persistence
         readonly IAuthenticatedUser _user;
         public DatabaseService(DbContextOptions<DatabaseService> options, IAuthenticatedUser user) : base(options)
         {
+            
             Database.EnsureCreated();
             _user = user;
         }
@@ -36,6 +37,7 @@ namespace SevenPeaks.VTS.Persistence
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
             base.OnModelCreating(modelBuilder);
         }

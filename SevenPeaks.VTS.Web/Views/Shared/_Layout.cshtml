@@ -6,9 +6,80 @@
     <title>@ViewData["Title"] - SevenPeaks.VTS.Web</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="~/css/site.css"/>
+    <style>
+        a {
+            text-decoration: none;
+            display: inline-block;
+            padding: 8px 16px;
+        }
+    
+            a:hover {
+                background-color: #ddd;
+                color: black;
+            }
+    
+        .previous {
+            background-color: #f1f1f1;
+            color: black;
+        }
+    
+        .next {
+            background-color: #04AA6D;
+            color: white;
+        }
+    
+        .round {
+            border-radius: 50%;
+        }
+    
+        .bg-white.navbar {
+            background-color: #D6EAF8 !important;
+        }
+    
+        a.nav-link.text-dark {
+            font-weight: 600;
+            font-size: 17px;
+        }
+    
+        button.nav-link.btn.btn-link.text-dark {
+            border-bottom: 1px solid;
+            padding: 0;
+            border-radius: 0;
+            margin-top: 4px;
+            color: #E74C3C !important;
+            font-weight: 600;
+        }
+        #clockIn, #clockOut {
+            display: inline-block;
+        }
+    
+        .att-card {
+            background: #fff;
+            box-shadow: 0 0 10px #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin: 25px 0;
+            border: 0 !important;
+        }
+        .display-4 {
+            font-size: 25px !important;
+            font-weight: 600 !important;
+            text-align: left !important;
+            margin: 17px 0 30px !important;
+        }
+        td a{
+            text-decoration: underline
+        }
+        td a:hover {
+            font-weight: 600;
+            background: none !important;
+        }
+    </style>
 </head>
 <body>
 <header>
+
+ 
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
         <div class="container">
             <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">SevenPeaks.VTS.Web</a>

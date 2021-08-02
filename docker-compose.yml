@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  sevenpeaks.vts.web:
+    image: ${DOCKER_REGISTRY-}sevenpeaksvts
+    build:
+      context: .
+      dockerfile: SevenPeaks.VTS.Web/Dockerfile

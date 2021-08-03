@@ -28,8 +28,6 @@ namespace SevenPeaks.VTS.Application.Vehicle.Commands.UpdateVehicle
                     ResponseCode = 404
                 };
             }
-            if(!string.IsNullOrWhiteSpace(command.Name))
-                entity.Name = command.Name;
             if(!string.IsNullOrWhiteSpace(command.Model))
                 entity.Model = command.Model;
             if(command.Year> 1990)

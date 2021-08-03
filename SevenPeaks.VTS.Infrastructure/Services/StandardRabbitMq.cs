@@ -21,28 +21,8 @@ namespace SevenPeaks.VTS.Infrastructure.Services
             _connectionString = settings.ConnectionString;
             _channel = RabbitMqChannel();
         }
-
-        public  string Consumer()
-        {
-            
-            var consumer = new EventingBasicConsumer(_channel);
-            //var result = "";
-            EventHandler<BasicDeliverEventArgs> consumerOnReceived = (sender, args) =>
-            {
-                var message = args.Body;
-                var body = message.ToArray().GetString();
-                stringResult = body;
-            };
-            consumer.Received += consumerOnReceived;
-            _channel.BasicConsume(_vehiclePosition, true, consumer);
-
-            return stringResult;
-        }
-
-        private void HandleMessage(string val)
-        {
-            stringResult = val;
-        }
+ 
+ 
 
         public  void Publish(object message)
         {

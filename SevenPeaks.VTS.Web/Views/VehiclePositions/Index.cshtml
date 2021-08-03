@@ -86,34 +86,31 @@
 
  
 <ul class="pagination">
-    <li class="page-item">
-        @if(Model?.PrevPageUrl != null)
-{
-    <a class="page-link" href="@Model.PrevPageUrl">@(Model.PageNumber-1)</a>
-}
-else
-{
-   <label class="page-link">-</label>
-}
+        <li class="page-item">
+            @if(Model?.PrevPageUrl != null)
+            {
+                <a class="page-link" href="@Model.PrevPageUrl">@(Model.PageNumber-1)</a>
+            }
+            else
+            {
+            <label class="page-link">-</label>
+            }
           
-            @* <a class="page-link" href="@Url.Action("Positions", new { page = i, plateNumber = @Context.Request.Query["plateNumber"]})">@i</a> *@
         </li>
          <li class="page-item active">
             <label class="page-link">@(Model.PageNumber)</label>
-            @* <a class="page-link" href="@Url.Action("Positions", new { page = i, plateNumber = @Context.Request.Query["plateNumber"]})">@i</a> *@
         </li>
          <li class="page-item">
             
-                    @if(Model?.NextPageUrl != null)
-{
-    <a class="page-link" href="@Model.NextPageUrl">@(Model.PageNumber+1)</a>
-}
-else
-{
-   <label class="page-link">-</label>
-}
-            @* <a class="page-link" href="@Url.Action("Positions", new { page = i, plateNumber = @Context.Request.Query["plateNumber"]})">@i</a> *@
+            @if(Model?.NextPageUrl != null)
+            {
+                <a class="page-link" href="@Model.NextPageUrl">@(Model.PageNumber+1)</a>
+            }
+            else
+            {
+            <label class="page-link">-</label>
+            }
         </li>
 </ul>
-</ul>
+ 
 

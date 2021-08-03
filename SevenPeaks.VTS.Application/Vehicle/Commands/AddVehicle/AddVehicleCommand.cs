@@ -32,15 +32,6 @@ namespace SevenPeaks.VTS.Application.Vehicle.Commands.AddVehicle
                         ResponseCode = 400
                     };
                 }
-                if(!string.IsNullOrWhiteSpace(command.DeviceId))
-                    if (_context.Vehicles.Any(vehicle => vehicle.DeviceCode == command.DeviceId && vehicle.IsActive))
-                    {
-                        _logger.LogInformation($"Device Id is inuse by a vehicle{command.PlateNumber}");
-                        return new MessageResponse<int>("Device Id is inuse by a vehicle")
-                        {
-                            ResponseCode = 400
-                        };
-                    }
                 
                 var entity = new Domain.Entities.Vehicle()
                 {
@@ -49,7 +40,7 @@ namespace SevenPeaks.VTS.Application.Vehicle.Commands.AddVehicle
                     PlateNumber = command.PlateNumber.Cleanup(),
                     UpdatedDate = DateTime.Now,
                     UserId = command.UserId,
-                    DeviceCode =  string.IsNullOrWhiteSpace(command.DeviceId)? Guid.NewGuid().ToString(): command.DeviceId,
+                    DeviceCode =  Guid.NewGuid().ToString(),
                     Model = command.Model,
                     Year = command.Year,
                     IsActive = true,

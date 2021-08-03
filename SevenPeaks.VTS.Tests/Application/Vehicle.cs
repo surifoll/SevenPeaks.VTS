@@ -58,8 +58,8 @@ namespace SevenPeaks.VTS.Tests.Application
             var loggerMock = new Mock<ILogger<AddVehicleCommand>>();
              
             IAddVehicleCommand add = new AddVehicleCommand(_context, loggerMock.Object);
-            var expected = await add.Execute(new AddVehicleModel(){DeviceId = "dd"});
-            var expected2 = await add.Execute(new AddVehicleModel(){DeviceId = "dd"});
+            var expected = await add.Execute(new AddVehicleModel(){});
+            var expected2 = await add.Execute(new AddVehicleModel(){});
 
             Assert.NotNull(expected2);
             Assert.Equal(400, expected2.ResponseCode);
@@ -73,8 +73,8 @@ namespace SevenPeaks.VTS.Tests.Application
              
             IAddVehicleCommand add = new AddVehicleCommand(_context, loggerMock.Object);
             IAddVehiclePositionCommand addPosition = new AddVehiclePositionCommand(_context, loggerMockPosition.Object);
-            var expected1 = await add.Execute(new AddVehicleModel(){DeviceId = "dd"});
-            var expected2 = await add.Execute(new AddVehicleModel(){DeviceId = "dd"});
+            var expected1 = await add.Execute(new AddVehicleModel(){});
+            var expected2 = await add.Execute(new AddVehicleModel(){});
 
             var expected = await addPosition.Execute(new AddVehiclePositionModel(){ DeviceId = "dd", VehicleId = 1});
 

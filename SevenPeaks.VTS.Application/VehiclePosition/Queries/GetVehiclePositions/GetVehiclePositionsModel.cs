@@ -17,5 +17,7 @@ namespace SevenPeaks.VTS.Application.VehiclePosition.Queries.GetVehiclePositions
     {
         public string PlateNumber { get; set; }
         public bool? GetLast { get; set; }
+        public DateTime? DateFrom { get; set; }
+        public DateTime? DateTo { get; set; }
     }
 }

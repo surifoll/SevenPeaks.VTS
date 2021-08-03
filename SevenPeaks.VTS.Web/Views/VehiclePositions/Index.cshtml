@@ -6,7 +6,14 @@
 }
 
 <h2>Vehicles</h2>
-
+ 
+<div class="block">
+     <br/>
+         <br/>
+    <a asp-action="Create" class="btn btn-primary">Create Vehicle</a>  
+     <br/>
+         <br/>
+</div>
  
  @using (Html.BeginForm("Index", "VehiclePositions", FormMethod.Get))
      {
@@ -65,7 +72,7 @@
          
          
                                  <td>
-                                     <a asp-action="Positions" asp-route-id="@item.PlateNumber">View Positions</a>  ||
+                                     <a asp-action="Positions" asp-route-plateNumber="@item.PlateNumber">View Positions</a>  |||
                                      <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>  
                                  </td>
                              </tr>

@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using SevenPeaks.VTS.Application.Vehicle.Commands.AddVehicle;
+using SevenPeaks.VTS.Application.Vehicle.Commands.UpdateVehicle;
+using SevenPeaks.VTS.Application.Vehicle.Queries.GetVehicle;
 using SevenPeaks.VTS.Application.Vehicle.Queries.GetVehicles;
 using SevenPeaks.VTS.Application.VehiclePosition.Commands.AddVehiclePosition;
 using SevenPeaks.VTS.Application.VehiclePosition.Queries.GetVehiclePositions;
@@ -45,7 +47,9 @@ namespace SevenPeaks.VTS.Web
             services.AddTransient<IGetVehiclesQuery, GetVehiclesQuery>();
             services.AddTransient<IAddVehicleCommand, AddVehicleCommand>();
             services.AddTransient<IAddVehiclePositionCommand, AddVehiclePositionCommand>();
+            services.AddTransient<IGetVehicleQuery, GetVehicleQuery>();
             services.AddTransient<IGetVehiclePositionsQuery, GetVehiclePositionsQuery>();
+            services.AddTransient<IUpdateVehicleCommand, UpdateVehicleCommand>();
             // services.AddTransient<IStandardRabbitMq, StandardRabbitMq>();
 
             var settings = new RabbitMqSettings();

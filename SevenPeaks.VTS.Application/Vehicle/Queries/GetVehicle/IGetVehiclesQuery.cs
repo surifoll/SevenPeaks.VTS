@@ -2,11 +2,10 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using SevenPeaks.VTS.Common.Models;
 
-namespace SevenPeaks.VTS.Application.Vehicle.Queries.GetVehicles
+namespace SevenPeaks.VTS.Application.Vehicle.Queries.GetVehicle
 {
-    public interface IGetVehiclesQuery
+    public interface IGetVehicleQuery
     {
-        Task<MessageResponse<PagedResults<GetVehiclesModel>>> Execute(VehiclesQuery query);
-        Task<bool> Execute(int vehicleId, string deviceId);
+        Task<GetVehicleModel> Execute(int id);
     }
 }

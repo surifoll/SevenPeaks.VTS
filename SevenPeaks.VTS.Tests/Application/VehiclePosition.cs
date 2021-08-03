@@ -50,8 +50,8 @@ namespace SevenPeaks.VTS.Tests.Application
              
             IAddVehicleCommand add = new AddVehicleCommand(_context, loggerMock.Object);
             IAddVehiclePositionCommand addPosition = new AddVehiclePositionCommand(_context, loggerMockPosition.Object);
-            var expected1 = await add.Execute(new AddVehicleModel(){DeviceId = "dd"});
-            var expected2 = await add.Execute(new AddVehicleModel(){DeviceId = "dd"});
+            var expected1 = await add.Execute(new AddVehicleModel(){});
+            var expected2 = await add.Execute(new AddVehicleModel(){});
 
             var expected = await addPosition.Execute(new AddVehiclePositionModel(){ DeviceId = "dd", VehicleId = 1});
 
@@ -84,7 +84,7 @@ namespace SevenPeaks.VTS.Tests.Application
             IAddVehicleCommand add = new AddVehicleCommand(_context, loggerMock.Object);
             IAddVehiclePositionCommand addPosition = new AddVehiclePositionCommand(_context, loggerMockPosition.Object);
             IGetVehiclePositionsQuery getVehiclePositions = new GetVehiclePositionsQuery(_context, _uriService);
-            var expected0 = await add.Execute(new AddVehicleModel(){DeviceId = "dd", PlateNumber = "AAA"});
+            var expected0 = await add.Execute(new AddVehicleModel(){ PlateNumber = "AAA"});
              
             var expected7 = await addPosition.Execute(new AddVehiclePositionModel(){ DeviceId = "dd", VehicleId = 1});
             var expected1 = await addPosition.Execute(new AddVehiclePositionModel(){ DeviceId = "dd", VehicleId = 1});

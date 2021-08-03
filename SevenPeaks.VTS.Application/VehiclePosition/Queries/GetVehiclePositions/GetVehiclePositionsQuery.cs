@@ -26,7 +26,9 @@ namespace SevenPeaks.VTS.Application.VehiclePosition.Queries.GetVehiclePositions
 
             if (!string.IsNullOrWhiteSpace(query.PlateNumber))
                 entities = entities.Where(vehicle => vehicle.Vehicle.PlateNumber == query.PlateNumber);
-            
+            if(query.DateFrom != null && query.DateTo != null){
+                entities = entities.Where(x => x.UpdatedDate >= query.DateFrom && x.UpdatedDate <= query.DateTo);
+            }
             if(query.GetLast is true)
                 entities = entities.OrderByDescending(p=>p.UpdatedDate).Take(1);
             

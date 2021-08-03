@@ -1,15 +1,14 @@
 @model SevenPeaks.VTS.Common.Models.PagedResults<SevenPeaks.VTS.Application.VehiclePosition.Queries.GetVehiclePositions.GetVehiclePositionsModel>
 
 @{
+    var date = DateTime.Now;
     ViewBag.Title = "title";
     Layout = "_Layout";
-    var last = ViewBag.Last as SevenPeaks.VTS.Application.VehiclePosition.Queries.GetVehiclePositions.GetVehiclePositionsModel;
+    var last = ViewBag.Last as SevenPeaks.VTS.Application.VehiclePosition.Queries.GetVehiclePositions.GetVehiclePositionsModel?? new SevenPeaks.VTS.Application.VehiclePosition.Queries.GetVehiclePositions.GetVehiclePositionsModel();
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&callback=initMap" async defer></script>
     <script type="text/javascript">
   function initMap() {
-      @{
-          System.Diagnostics.Debug.Assert(last != null, nameof(last) + " != null");
-      }
+      
     //map..
     var map = new google.maps.Map(document.getElementById('dvMap'), {
         center: {
@@ -39,6 +38,7 @@ google.maps.event.addListener(marker,'dragend', function () {
 });
 }
         </script>
+      
 }
 
 <h2>Vehicle Positions</h2>
@@ -46,8 +46,7 @@ google.maps.event.addListener(marker,'dragend', function () {
     <div id="dvMap" style="height:250px;"></div>
     @if ((ViewBag.Last) != null)
     {
-        //var last = ViewBag.Last as SevenPeaks.VTS.Application.VehiclePosition.Queries.GetVehiclePositions.GetVehiclePositionsModel;
-        <h3>Last Position</h3>
+        <h3>Current Position</h3>
         <h4 class="display-6">
 
             @if (last != null)
@@ -70,14 +69,33 @@ google.maps.event.addListener(marker,'dragend', function () {
             }
         </h4>
         <p> View on Map</p>
-
-
     }
 
 </div>
-
- @using (Html.BeginForm("Index", "VehiclePositions", FormMethod.Get))
+ 
+ @using (Html.BeginForm("Positions", "VehiclePositions", new {ViewBag.QueryStrings}))
      {
+    
+    <div class="row">  
+           
+            <div class="col-sm-10">  
+            <div class="col-sm-4">  
+                <label>From Date</label>
+                <input type="datetime-local" id="dateFrom" name="dateFrom" class="form-control" placeholder="Select Date" />  
+            </div>  
+            
+            <div class="col-sm-2"></div>  
+            <div class="col-sm-4">  
+             <label>To Date</label>
+                <input type="datetime-local" id="dateTo" name="dateTo" class="form-control" placeholder="Select Date" />  
+            </div>  
+            <div class="col-sm-2">  
+                <br />  
+                <input type="submit" value="Seach" class="btn btn-primary form-control" />  
+            </div>  
+            <br />
+        </div>  
+        </div>  
          
          <div class="att-card">
          
@@ -118,7 +136,7 @@ google.maps.event.addListener(marker,'dragend', function () {
                                  </td>
          
                                  <td>
-                                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> 
+                                     <a asp-action="Edit" asp-route-id="@item.Id">View on map</a> 
                                      
                                  </td>
                              </tr>

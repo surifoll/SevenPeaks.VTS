@@ -76,7 +76,7 @@ namespace SevenPeaks.VTS.Tests.Application
             var expected1 = await add.Execute(new AddVehicleModel(){});
             var expected2 = await add.Execute(new AddVehicleModel(){});
 
-            var expected = await addPosition.Execute(new AddVehiclePositionModel(){ DeviceId = "dd", VehicleId = 1});
+            var expected = await addPosition.Execute(new AddVehiclePositionModel(){ DeviceId = expected1.Result, VehicleId = 1});
 
             Assert.NotNull(expected2);
             Assert.Equal(200, expected.ResponseCode);

@@ -86,11 +86,11 @@ namespace SevenPeaks.VTS.Tests.Application
             IGetVehiclePositionsQuery getVehiclePositions = new GetVehiclePositionsQuery(_context, _uriService);
             var expected0 = await add.Execute(new AddVehicleModel(){ PlateNumber = "AAA"});
              
-            var expected7 = await addPosition.Execute(new AddVehiclePositionModel(){ DeviceId = "dd", VehicleId = 1});
-            var expected1 = await addPosition.Execute(new AddVehiclePositionModel(){ DeviceId = "dd", VehicleId = 1});
-            var expected2 = await addPosition.Execute(new AddVehiclePositionModel(){ DeviceId = "dd", VehicleId = 1});
-            var expected3 = await addPosition.Execute(new AddVehiclePositionModel(){ DeviceId = "dd", VehicleId = 1});
-            var expected4 = await addPosition.Execute(new AddVehiclePositionModel(){ DeviceId = "dd", VehicleId = 1});
+            var expected7 = await addPosition.Execute(new AddVehiclePositionModel(){ DeviceId = expected0.Result, VehicleId = 1});
+            var expected1 = await addPosition.Execute(new AddVehiclePositionModel(){ DeviceId = expected0.Result, VehicleId = 1});
+            var expected2 = await addPosition.Execute(new AddVehiclePositionModel(){ DeviceId = expected0.Result, VehicleId = 1});
+            var expected3 = await addPosition.Execute(new AddVehiclePositionModel(){ DeviceId = expected0.Result, VehicleId = 1});
+            var expected4 = await addPosition.Execute(new AddVehiclePositionModel(){ DeviceId = expected0.Result, VehicleId = 1});
             var expected = await getVehiclePositions.Execute(new VehiclePositionsQuery()
             {
                 PlateNumber = "AAA"

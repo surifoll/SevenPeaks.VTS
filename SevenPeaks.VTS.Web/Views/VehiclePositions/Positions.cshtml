@@ -1,3 +1,4 @@
+@using System.Web
 @model SevenPeaks.VTS.Common.Models.PagedResults<SevenPeaks.VTS.Application.VehiclePosition.Queries.GetVehiclePositions.GetVehiclePositionsModel>
 
 @{
@@ -72,12 +73,11 @@ google.maps.event.addListener(marker,'dragend', function () {
     }
 
 </div>
- 
- @using (Html.BeginForm("Positions", "VehiclePositions", new {ViewBag.QueryStrings}))
-     {
+ <form name="positionForm" id="positionForm" action="Positions?@ViewBag.QueryStrings" method="get">
+    
     
     <div class="row">  
-           
+           <input type="hidden" name="plateNumber" id="plateNumber" value="@Context.Request.Query["plateNumber"]">
             <div class="col-sm-10">  
             <div class="col-sm-4">  
                 <label>From Date</label>
@@ -145,17 +145,38 @@ google.maps.event.addListener(marker,'dragend', function () {
                  </table>
                  
              </div>
-     }
+ </form>
 
 
  
 <ul class="pagination">
-    @for (int i = 1; i <= Model.TotalNumberOfPages; i++)
-    {
-        <li class="@(i == Model.PageNumber ? "page-item active" : "page-item")">
-            <a class="page-link" href="@Url.Action("Positions", new { page = i })">@i</a>
+    <li class="page-item">
+        @if(Model?.PrevPageUrl != null)
+{
+    <a class="page-link" href="@Model.PrevPageUrl">@(Model.PageNumber-1)</a>
+}
+else
+{
+   <label class="page-link">-</label>
+}
+          
+            @* <a class="page-link" href="@Url.Action("Positions", new { page = i, plateNumber = @Context.Request.Query["plateNumber"]})">@i</a> *@
         </li>
-
-    }
+         <li class="page-item active">
+            <label class="page-link">@(Model.PageNumber)</label>
+            @* <a class="page-link" href="@Url.Action("Positions", new { page = i, plateNumber = @Context.Request.Query["plateNumber"]})">@i</a> *@
+        </li>
+         <li class="page-item">
+            
+                    @if(Model?.NextPageUrl != null)
+{
+    <a class="page-link" href="@Model.NextPageUrl">@(Model.PageNumber+1)</a>
+}
+else
+{
+   <label class="page-link">-</label>
+}
+            @* <a class="page-link" href="@Url.Action("Positions", new { page = i, plateNumber = @Context.Request.Query["plateNumber"]})">@i</a> *@
+        </li>
 </ul>
 

@@ -50,7 +50,7 @@ namespace SevenPeaks.VTS.Web.Controllers
             return base.View(model.Result);
         }
 
-        public async Task<IActionResult> Positions(DateTime? dateFrom, DateTime? dateTo, string plateNumber = "", int page = 1, int pageSize = 10)
+        public async Task<IActionResult> Positions(DateTime? dateFrom, DateTime? dateTo, string plateNumber = "", int pageNumber = 1, int pageSize = 10)
         {
             // To select the last/current record
 
@@ -59,8 +59,8 @@ namespace SevenPeaks.VTS.Web.Controllers
             var last = await _positionsQuery.Execute(new VehiclePositionsQuery()
             {
                 Route = Request.Path.Value,
-                Page = page,
-                PageSize = pageSize,
+                Page = 1,
+                PageSize = 1,
                 PlateNumber = plateNumber,
                 GetLast = true
             });
@@ -70,7 +70,7 @@ namespace SevenPeaks.VTS.Web.Controllers
             var model = await _positionsQuery.Execute(new VehiclePositionsQuery()
             {
                 Route = Request.Path.Value,
-                Page = page,
+                Page = pageNumber,
                 PageSize = pageSize,
                 PlateNumber = plateNumber,
                 DateFrom = dateFrom,
@@ -80,22 +80,7 @@ namespace SevenPeaks.VTS.Web.Controllers
             return base.View(model.Result);
         }
 
-        // public async Task<IActionResult> GetCurrentPosition(string plateNumber = "")
-        // {
-        //     // To select the last/current record
-        //     var last = await _positionsQuery.Execute(new VehiclePositionsQuery()
-        //     {
-        //         Route = Request.Path.Value,
-        //         Page = 1,
-        //         PageSize = 10,
-        //         PlateNumber = plateNumber,
-        //         GetLast = true
-        //     });
-        //     ViewBag.Last = last.Result?.Results?.FirstOrDefault();
-
- 
-        //     return last;
-        // }
+        
 
         public IActionResult Create()
         {

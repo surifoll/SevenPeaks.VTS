@@ -19,7 +19,7 @@ namespace SevenPeaks.VTS.Application.Vehicle.Commands.AddVehicle
         }
 
 
-        public async Task<MessageResponse<int>> Execute(AddVehicleModel command)
+        public async Task<MessageResponse<string>> Execute(AddVehicleModel command)
         {
             try
             {
@@ -27,7 +27,7 @@ namespace SevenPeaks.VTS.Application.Vehicle.Commands.AddVehicle
                 if (_context.Vehicles.Any(vehicle => vehicle.PlateNumber == command.PlateNumber))
                 {
                     _logger.LogInformation($"Vehicle with the plate number already exists {command.PlateNumber}");
-                    return new MessageResponse<int>("Vehicle with the plate number already exists")
+                    return new MessageResponse<string>("Vehicle with the plate number already exists")
                     {
                         ResponseCode = 400
                     };
@@ -48,10 +48,10 @@ namespace SevenPeaks.VTS.Application.Vehicle.Commands.AddVehicle
 
                 _context.Vehicles.Add(entity);
                 var result = await _context.SaveAsync();
-                return new MessageResponse<int>("Vehicle create")
+                return new MessageResponse<string>("Vehicle create")
                 {
                     ResponseCode = 200,
-                    Result = result
+                    Result = entity.DeviceCode
                 };
             }
             catch (Exception e)
